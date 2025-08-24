@@ -6,43 +6,63 @@
     import "../../node_modules/vue-simple-calendar/dist/vue-simple-calendar.css"
 
     import "../../node_modules/vue-simple-calendar/dist/css/default.css"
+    import { useActivityStore } from '@/stores/activity';
+    
+    import AddActivityPopup from '@/components/popups/AddActivityPopup.vue';
 
+    const isOpen = ref(false)
+    const selectedDate = ref(new Date())
+   
     const showDate = ref(new Date())
     function setShowDate(d: Date) {
         showDate.value = d;
     }
 
-    const items = ref<ICalendarItem[]>([
-        {
-            id: "1",
-            startDate: new Date(),
-            title: "Test Item"
-        }
-    ])
+    const activityStore = useActivityStore();
 
-    function addItem(){
-        const newItem: ICalendarItem = {
-            id: "2",
-            startDate: new Date(2025, 7, 20, 14, 30),
-            title: "Added Item"
-        }
+    function dateClicked(date: Date, calendarItems: any, windowEvent: any) {
+        isOpen.value = true;
+        selectedDate.value = date;  
+    }
 
-        items.value.push(newItem)
+    function droppedItemOnDate(calendarItem: ICalendarItem, date: Date){
+        const newDate = new Date(
+            date.getFullYear(), 
+            date.getMonth(), 
+            date.getDate(), 
+            calendarItem.startDate.getHours(), 
+            calendarItem.startDate.getMinutes()
+        );
+
+        console.log(newDate);
+
+        activityStore.updateActivityTime(calendarItem.id, newDate)
     }
 
 </script>
 
 <template>
     <div class="action-header">
-        <button class="btn-primary add-button" @click="addItem">+</button>
+        <button class="btn-primary add-button">+</button>
     </div>
     <div class="vue-calendar">
-        <CalendarView :items="items" :enable-drag-drop="true" :show-times="true" :starting-day-of-week="1" :show-date="showDate" class="theme-default">
-            <template #header=" { headerProps }">
+        <CalendarView
+            class="theme-default"
+            :starting-day-of-week="1"
+            :show-date="showDate"
+            :items="activityStore.activities"
+            :enable-drag-drop="true" 
+            :show-times="true"
+            @click-date="dateClicked"
+            @drop-on-date="droppedItemOnDate"
+            >
+            <template #header="{ headerProps }">
                 <CalendarViewHeader :header-props="headerProps" @input="setShowDate"></CalendarViewHeader>
             </template>
         </CalendarView>
     </div>
+
+    <AddActivityPopup v-model="isOpen" :selected-date="selectedDate"></AddActivityPopup>
 </template>
 
 <style lang="css" scoped>
@@ -60,7 +80,7 @@
 
         font-size: 20px;
     }
-.vue-calendar {
-    height: 67vh;
-}
+    .vue-calendar {
+        height: 67vh;
+    }
 </style>
