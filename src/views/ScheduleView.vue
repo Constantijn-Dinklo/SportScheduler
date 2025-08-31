@@ -22,7 +22,7 @@
 
     function dateClicked(date: Date, calendarItems: any, windowEvent: any) {
         isOpen.value = true;
-        selectedDate.value = date;  
+        selectedDate.value = date;
     }
 
     function droppedItemOnDate(calendarItem: ICalendarItem, date: Date){
@@ -34,7 +34,6 @@
             calendarItem.startDate.getMinutes()
         );
 
-        console.log(newDate);
 
         activityStore.updateActivityTime(calendarItem.id, newDate)
     }
@@ -50,7 +49,7 @@
             class="theme-default"
             :starting-day-of-week="1"
             :show-date="showDate"
-            :items="activityStore.activities"
+            :items="activityStore.calendarActivities"
             :enable-drag-drop="true" 
             :show-times="true"
             @click-date="dateClicked"
@@ -65,7 +64,7 @@
     <AddActivityPopup v-model="isOpen" :selected-date="selectedDate"></AddActivityPopup>
 </template>
 
-<style lang="css" scoped>
+<style lang="css">
     .action-header {
         padding: 5px;
         display: flex;
@@ -82,5 +81,9 @@
     }
     .vue-calendar {
         height: 67vh;
+    }
+
+    .red-activity {
+        background-color: red
     }
 </style>
