@@ -1,0 +1,16 @@
+.btn-primary {
+    background: #e14eca;
+    background-image: -webkit-gradient(linear,right top,left bottom,from(#e14eca),color-stop(#ba54f5),to(#e14eca));
+    background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
+    background-size: 210% 210%;
+    background-position: 100% 0;
+    background-color: #e14eca;
+    -webkit-transition: all .15s ease;
+    transition: all .15s ease;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #fff;
+
+    border: none;
+    border-radius: 0.5em;
+}
