@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const User = require('./models/User');
+const { authenticateToken } = require('./middelware');
 
 const router = express.Router();
 
-
-const SECRET = 'Try Tri Triathlon';
+const SECRET = process.env.JWT_SECRET
 
 router.post('/signup', async (req, res) => {
 
@@ -55,21 +55,7 @@ router.post('/login', async (req, res) => {
 router.post('/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Logged out'});
-})
-
-
-//Middelware -> move to own file
-function authenticateToken(req, res, next) {
-  const token = req.cookies.token;
-
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
+});
 
 router.get('/profile', authenticateToken, (req, res) => {
   res.json({ message: 'Protected data', user: req.user });
