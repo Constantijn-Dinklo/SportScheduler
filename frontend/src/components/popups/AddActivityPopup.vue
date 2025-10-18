@@ -18,6 +18,9 @@
         (e: "update:modelValue", value: boolean): void
     }>()
     
+
+    //TODO: change the times to be a single value 'startDate'
+    //      change the <input> to be of 'type' 'datetime-local'
     const newItem = ref({
         title: '',
         discipline: '',
