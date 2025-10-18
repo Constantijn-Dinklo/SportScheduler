@@ -6,8 +6,10 @@ const cors = require('cors');
 
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
-const disciplineRoutes = require('./routes/disciplineRoutes');
 const authRoutes = require('./auth');
+const activityRoutes = require('./routes/activityRoutes');
+const disciplineRoutes = require('./routes/disciplineRoutes');
+
 
 const app = express();
 
@@ -21,8 +23,10 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/users', userRoutes);
-app.use('/disciplines', disciplineRoutes);
 app.use('/auth', authRoutes);
+app.use('/activities', activityRoutes);
+app.use('/disciplines', disciplineRoutes);
+
 
 app.get('/', (req, res) => {
     res.json({ message: 'Hello from backend!' });

@@ -2,10 +2,11 @@
     import { dateFromString, formatDateString, formatTimeString } from '@/helpers/date-helper';
     import { useActivityStore } from '@/stores/activity';
     import { useDisciplineStore } from '@/stores/discipline';
-    import { ref, watch } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
 
     const titleInputRef = ref<HTMLInputElement | null>(null)
 
+    const activityStore = useActivityStore();
     const disciplineStore = useDisciplineStore();
 
     const props = defineProps<{
@@ -26,6 +27,17 @@
         endTime: '',
         duration: 60
     })
+
+    onMounted(() => {
+        disciplineStore.fetchDisciplines();
+    })
+
+    watch(
+        titleInputRef,
+        () => {
+            titleInputRef.value?.focus()
+        }
+    )
 
     watch(
         [() => props.modelValue, () => props.selectedDate],
@@ -49,18 +61,11 @@
         }
     )
 
-    watch(
-        titleInputRef,
-        () => {
-            titleInputRef.value?.focus()
-        }
-    )
-
-    const activityStore = useActivityStore();
 
     function addItem(){
         const startDate = dateFromString(newItem.value.startDate, newItem.value.startTime);
-        activityStore.addActivity(newItem.value.title, newItem.value.discipline, startDate, newItem.value.duration);
+        const endDate = dateFromString(newItem.value.endDate, newItem.value.endTime);
+        activityStore.addActivity(newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
         emit("update:modelValue", false);
         resetNewItem();
     }
@@ -98,7 +103,12 @@
                 Discipline:
                 <select id="discipline" v-model="newItem.discipline">
                     <option disabled value="">-- Please choose --</option>
-                    <option v-for="discipline in disciplineStore.disciplines">{{ discipline.name }}</option>
+                    <option 
+                        v-for="discipline in disciplineStore.disciplines" 
+                        :key="discipline.id" 
+                        :value="discipline.id">
+                        {{ discipline.name }}
+                    </option>
                 </select>
             </div>
             <div class="row">

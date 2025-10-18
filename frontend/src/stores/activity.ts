@@ -1,3 +1,4 @@
+import api from "@/helpers/axios";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -9,7 +10,8 @@ interface Activity {
     title: string;
     discipline: string;
     startDate: Date;
-    duration: number;
+    endDate: Date;
+    duration?: number;
 }
 
 
@@ -18,6 +20,7 @@ export const useActivityStore = defineStore('activity', () => {
             id: uuidv4(),
             title: "Test Item",
             startDate: new Date(),
+            endDate: addDurationToDate(new Date(), 1000),
             duration: 1000,
             discipline: ''
         }
@@ -35,15 +38,23 @@ export const useActivityStore = defineStore('activity', () => {
         })
     })
 
-    function addActivity(title: string, discipline: string, startDate: Date, duration: number){
-        const id = uuidv4();
-        activities.value.push({
-            id,
-            title,
+    async function addActivity(title: string, discipline: string, startDate: Date, endDate: Date, duration: number){
+        const response = await api.post('/activities', {
+            name: title,
             discipline,
             startDate,
-            duration,
-        })
+            endDate,
+            duration
+        });
+        // const id = uuidv4();
+        // activities.value.push({
+        //     id,
+        //     title,
+        //     discipline,
+        //     startDate,
+        //     endDate: addDurationToDate(startDate, duration),
+        //     duration,
+        // })
     }
 
     function updateActivityTime(id: string, newStartDate:Date){

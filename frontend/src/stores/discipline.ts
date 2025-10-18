@@ -34,7 +34,7 @@ export const useDisciplineStore = defineStore('discipline', () => {
 
     async function removeDiscipline(id: string) {
         const response = await api.delete(`/disciplines/${id}`);
-        disciplines.value = disciplines.value.filter((discipline) => discipline.id != response.data.id)
+        disciplines.value = disciplines.value.filter((discipline) => discipline.id != response.data.disciplineId)
     }
 
     return { disciplines, fetchDisciplines, addDiscipline, removeDiscipline }
