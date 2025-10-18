@@ -22,24 +22,63 @@
         authStore.getProfile();
     }
 
+    function logout() {
+        authStore.logout();
+    }
+
 </script>
 
 <template>
-    <div>
-        <div>
-            Login
+    <div class="registration-container">
+        <div class="login-container">
+            <div>
+                Login
+            </div>
+            <div>Username: <input v-model="loginEmail" placeholder="email"/></div>
+            <div><button @click="login">Login</button></div>
         </div>
-        <div>Username: <input v-model="loginEmail" placeholder="email"/></div>
-        <div><button @click="login">Login</button></div>
+        <div class="signup-container">
+            <div>Sign up</div>
+            <div>Name: <input v-model="name" placeholder="name"/></div>
+            <div>Email: <input v-model="email" type="email" placeholder="email"/></div>
+            <div><button @click="signup">Sign Up</button></div>
+        </div>
     </div>
-    <div>
-        <div>Sign up</div>
-        <div>Name: <input v-model="name" placeholder="name"/></div>
-        <div>Email: <input v-model="email" type="email" placeholder="email"/></div>
-        <div><button @click="signup">Sign Up</button></div>
-    </div>
+
     <div>
         <div>Get Profile</div>
         <div><button @click="getProfile">Get profile</button></div>
     </div>
+
+    <div>
+        <button @click="logout">Logout</button>
+    </div>
+    
 </template>
+
+<style lang="css">
+    .registration-container {
+        padding-top: 50px;
+        height: 200px;
+
+        display: flex;
+        justify-content: space-evenly;
+
+    }
+
+    .login-container {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .signup-container {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: space-around;
+    }
+</style>

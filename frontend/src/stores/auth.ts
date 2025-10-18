@@ -29,11 +29,17 @@ export const useAuthStore = defineStore('auth', () => {
         auth.value.isAuthenticated = true;
     }
 
+    async function logout() {
+        const res = await api.post('/auth/logout');
+        auth.value.name =  '';
+        auth.value.isAuthenticated = false;
+    }
+
     async function getProfile() {
         console.log("Get Profile");
         const res = await api.get('/auth/profile');
         console.log(res);
     }
 
-    return { auth, signup, login, getProfile };
+    return { auth, signup, login, logout, getProfile };
 })

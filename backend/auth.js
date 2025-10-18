@@ -11,11 +11,9 @@ const SECRET = process.env.JWT_SECRET
 
 router.post('/signup', async (req, res) => {
 
-    //TODO: Check if user with email already exists
     const user = await User.findOne({ email: req.body.email});
     if(user) return res.status(400).json({ message: 'User already exists'});
 
-    console.log(req.body);
     try {
         const newUser = new User(req.body);
         const user = await newUser.save();
