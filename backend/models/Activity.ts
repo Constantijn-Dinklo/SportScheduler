@@ -1,6 +1,15 @@
-const {Schema, model} = require('mongoose');
+import mongoose, {Document, Model, Schema, Types } from 'mongoose';
 
-const ActivitySchema = new Schema({
+export interface IActivity extends Document {
+    userId: Types.ObjectId,
+    title: string;
+    disciplineId: Types.ObjectId;
+    startTime: Date;
+    endTime: Date;
+    duration?: number;
+}
+
+const ActivitySchema = new Schema<IActivity>({
     userId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -29,10 +38,12 @@ const ActivitySchema = new Schema({
 });
 
 ActivitySchema.set('toJSON', {
-    transform: (doc, ret) => {
+    transform: (doc, ret: Partial<IActivity>) => {
         delete ret.userId;
         return ret;
     }
 })
 
-module.exports = model('Activity', ActivitySchema);
+const Activity: Model<IActivity> = mongoose.model<IActivity>('Activity', ActivitySchema);
+
+export default Activity;

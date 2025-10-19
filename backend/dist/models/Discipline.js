@@ -1,5 +1,5 @@
-const {Schema, model} = require('mongoose');
-
+"use strict";
+const { Schema, model } = require('mongoose');
 const DisciplineSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
@@ -11,5 +11,4 @@ const DisciplineSchema = new Schema({
         required: true
     }
 });
-
 module.exports = model('Discipline', DisciplineSchema);

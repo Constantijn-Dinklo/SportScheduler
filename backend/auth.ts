@@ -1,35 +1,35 @@
-const express = require('express')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+import express, { Request, Response, Router } from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
-const User = require('./models/User');
-const { authenticateToken } = require('./middelware');
+import User, { IUser } from './models/User';
+import { AuthenticatedRequest, authenticateToken } from './middelware';
 
-const router = express.Router();
+const router: Router = express.Router();
 
-const SECRET = process.env.JWT_SECRET
+const SECRET = process.env.JWT_SECRET as string;
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', async (req: Request, res: Response) => {
 
-    const user = await User.findOne({ email: req.body.email});
+    const user: IUser | null = await User.findOne({ email: req.body.email});
     if(user) return res.status(400).json({ message: 'User already exists'});
 
     try {
-        const newUser = new User(req.body);
-        const user = await newUser.save();
+        const newUser: IUser = new User(req.body);
+        const user: IUser = await newUser.save();
 
         const token = jwt.sign({id: user.id, username: user.email}, SECRET, { expiresIn: '24h'});
 
         res.status(201).json({token: token, name: user.name});
-    } catch (err) {
+    } catch (err: any) {
         res.status(400).json({ error: err.message });
     }
 
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: Request, res: Response) => {
     const { username } = req.body;
-    const user = await User.findOne({ email: username});
+    const user: IUser | null = await User.findOne({ email: username});
 
     if(!user) return res.status(401).json({message: 'Invalid credentials'});
 
@@ -50,13 +50,13 @@ router.post('/login', async (req, res) => {
     res.json({ name: user.name });
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', (_req: Request, res: Response) => {
     res.clearCookie('token');
     res.json({ message: 'Logged out'});
 });
 
-router.get('/profile', authenticateToken, (req, res) => {
+router.get('/profile', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
   res.json({ message: 'Protected data', user: req.user });
 });
 
-module.exports = router;
+export default router;
