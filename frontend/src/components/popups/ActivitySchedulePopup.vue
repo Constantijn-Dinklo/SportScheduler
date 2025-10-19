@@ -11,13 +11,15 @@
 
     const props = defineProps<{
         modelValue: boolean;
-        selectedDate: Date
+        selectedActivityId: string;
+        selectedDate: Date;
     }>()
 
     const emit = defineEmits<{
         (e: "update:modelValue", value: boolean): void
     }>()
     
+    const editing = ref(false);
 
     //TODO: change the times to be a single value 'startDate'
     //      change the <input> to be of 'type' 'datetime-local'
@@ -64,22 +66,45 @@
         }
     )
 
+    watch(
+        () => props.selectedActivityId,
+        (activityId) => {
+            const activity = activityStore.getActivity(activityId);
+            if(!activity) { return; }
+
+            editing.value = true;
+
+            newItem.value = {
+                title: activity.title,
+                discipline: activity.disciplineId,
+                startDate: formatDateString(activity.startDate),
+                startTime: formatTimeString(activity.startDate),
+                endDate: formatDateString(activity.endDate),
+                endTime: formatTimeString(activity.endDate),
+                duration: 60
+            }
+            
+        }
+    )
+
 
     function addItem(){
         const startDate = dateFromString(newItem.value.startDate, newItem.value.startTime);
         const endDate = dateFromString(newItem.value.endDate, newItem.value.endTime);
         activityStore.addActivity(newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
         emit("update:modelValue", false);
-        resetNewItem();
+        resetPopup();
     }
 
     function close(){
-        resetNewItem();
         emit("update:modelValue", false);
+        resetPopup();
     }
 
 
-    function resetNewItem(){
+    function resetPopup(){
+        editing.value = false;
+
         newItem.value = {
             title: '',
             discipline: '',
@@ -124,7 +149,8 @@
                 <input v-model="newItem.endDate" type="date"/>
                 <input v-model="newItem.endTime" type="time" />
             </div>
-            <button class="btn-primary" @click="addItem">Add Item</button>
+            <button v-if="!editing" class="btn-primary" @click="addItem">Add Item</button>
+            <button v-else class="btn-primary" @click="addItem">Update Item</button>
         </div>
         
     </dialog>

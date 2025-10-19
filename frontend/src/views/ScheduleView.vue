@@ -8,10 +8,10 @@
 
     import { useActivityStore } from '@/stores/activity';
 
-    import AddActivityPopup from '@/components/popups/AddActivityPopup.vue';
-    import api from '../helpers/axios';
+    import AddActivityPopup from '@/components/popups/ActivitySchedulePopup.vue';
 
     const isOpen = ref(false)
+    const selectedActivityId = ref('')
     const selectedDate = ref(new Date())
    
     const showDate = ref(new Date())
@@ -20,8 +20,6 @@
     }
 
     const activityStore = useActivityStore();
-
-    const message = ref('Loading...');
 
     onMounted(() => {
         activityStore.fetchActivities();
@@ -32,6 +30,11 @@
         selectedDate.value = date;
     }
 
+    function itemClicked(calendarItem: ICalendarItem) {
+        isOpen.value = true;
+        selectedActivityId.value = calendarItem.id;
+    }
+
     function droppedItemOnDate(calendarItem: ICalendarItem, date: Date){
         const newDate = new Date(
             date.getFullYear(), 
@@ -40,7 +43,6 @@
             calendarItem.startDate.getHours(), 
             calendarItem.startDate.getMinutes()
         );
-
 
         activityStore.updateActivityTime(calendarItem.id, newDate)
     }
@@ -60,6 +62,7 @@
             :enable-drag-drop="true" 
             :show-times="true"
             @click-date="dateClicked"
+            @click-item="itemClicked"
             @drop-on-date="droppedItemOnDate"
             >
             <template #header="{ headerProps }">
@@ -68,7 +71,7 @@
         </CalendarView>
     </div>
 
-    <AddActivityPopup v-model="isOpen" :selected-date="selectedDate"></AddActivityPopup>
+    <AddActivityPopup v-model="isOpen" :selected-activity-id="selectedActivityId" :selected-date="selectedDate"></AddActivityPopup>
 </template>
 
 <style lang="css">

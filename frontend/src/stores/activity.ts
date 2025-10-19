@@ -31,16 +31,15 @@ export const useActivityStore = defineStore('activity', () => {
     async function fetchActivities() {
         const response = await api.get('/activities');
         const data = response.data;
-        activities.value = [];
-        data.forEach((activity: any) => {
-            activities.value.push({
+        activities.value = data.map((activity: any) => {
+            return {
                 id: activity._id,
                 title: activity.title,
                 disciplineId: activity.disciplineId,
-                startDate: activity.startTime,
-                endDate: activity.endTime
-            })
-        })
+                startDate: new Date(activity.startTime),
+                endDate: new Date(activity.endTime)
+            }
+        });
     }
 
     async function addActivity(title: string, disciplineId: string, startDate: Date, endDate: Date, duration: number){
@@ -52,6 +51,10 @@ export const useActivityStore = defineStore('activity', () => {
             duration
         });
         console.log(response);
+    }
+
+    function getActivity(id: string): Activity | undefined {
+        return activities.value.find(activity => activity.id === id);
     }
 
     function updateActivityTime(id: string, newStartDate:Date){
@@ -66,5 +69,5 @@ export const useActivityStore = defineStore('activity', () => {
         })
     }
 
-    return { activities, calendarActivities, fetchActivities, addActivity, updateActivityTime}
+    return { activities, calendarActivities, fetchActivities, addActivity, getActivity, updateActivityTime}
 })
