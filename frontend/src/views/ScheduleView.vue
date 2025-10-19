@@ -21,7 +21,11 @@
 
     const activityStore = useActivityStore();
 
-    const message = ref('Loading...')
+    const message = ref('Loading...');
+
+    onMounted(() => {
+        activityStore.fetchActivities();
+    })
 
     function dateClicked(date: Date, calendarItems: any, windowEvent: any) {
         isOpen.value = true;

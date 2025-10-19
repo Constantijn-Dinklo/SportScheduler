@@ -28,4 +28,11 @@ const ActivitySchema = new Schema({
     }
 });
 
+ActivitySchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.userId;
+        return ret;
+    }
+})
+
 module.exports = model('Activity', ActivitySchema);
