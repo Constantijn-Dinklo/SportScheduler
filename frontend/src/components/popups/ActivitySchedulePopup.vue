@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { dateFromString, formatDateString, formatTimeString } from '@/helpers/date-helper';
+    import { formatDateString, formatTimeString, toDatetimeLocalString } from '@/helpers/date-helper';
     import { useActivityStore } from '@/stores/activity';
     import { useDisciplineStore } from '@/stores/discipline';
     import { onMounted, ref, watch } from 'vue';
@@ -27,9 +27,7 @@
         title: '',
         discipline: '',
         startDate: '',
-        startTime: '12:00',
         endDate: '',
-        endTime: '',
         duration: 60
     })
 
@@ -49,20 +47,17 @@
         ([isOpen, selectedDate]) => {
             if(!isOpen) return;
 
-            const [hours, minutes] = newItem.value.startTime.split(":").map(Number);
+            editing.value = false;
+
+            const startTime = '12:00';
+            const [hours, minutes] = startTime.split(":").map(Number);
             selectedDate.setHours(hours, minutes, 0, 0);
 
-            const startDateString = formatDateString(selectedDate);
-
-            const endDate = dateFromString(startDateString, newItem.value.startTime);
+            const endDate = new Date(selectedDate);
             endDate.setMinutes(endDate.getMinutes() + newItem.value.duration);
 
-            const endDateString = formatDateString(endDate);
-            const endTimeString = formatTimeString(endDate);
-
-            newItem.value.startDate = startDateString;
-            newItem.value.endDate = endDateString;
-            newItem.value.endTime = endTimeString;
+            newItem.value.startDate = toDatetimeLocalString(selectedDate);
+            newItem.value.endDate = toDatetimeLocalString(endDate);
         }
     )
 
@@ -77,20 +72,17 @@
             newItem.value = {
                 title: activity.title,
                 discipline: activity.disciplineId,
-                startDate: formatDateString(activity.startDate),
-                startTime: formatTimeString(activity.startDate),
-                endDate: formatDateString(activity.endDate),
-                endTime: formatTimeString(activity.endDate),
+                startDate: toDatetimeLocalString(activity.startDate),
+                endDate: toDatetimeLocalString(activity.endDate),
                 duration: 60
             }
-            
         }
     )
 
 
     function addItem(){
-        const startDate = dateFromString(newItem.value.startDate, newItem.value.startTime);
-        const endDate = dateFromString(newItem.value.endDate, newItem.value.endTime);
+        const startDate = new Date(newItem.value.startDate);
+        const endDate = new Date(newItem.value.endDate); 
         activityStore.addActivity(newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
         emit("update:modelValue", false);
         resetPopup();
@@ -114,9 +106,7 @@
             title: '',
             discipline: '',
             startDate: '',
-            startTime: '12:00',
             endDate: '',
-            endTime: '',
             duration: 60
         }
     }
@@ -146,13 +136,11 @@
             </div>
             <div class="row">
                 Start Time:
-                <input v-model="newItem.startDate" type="date" />
-                <input v-model="newItem.startTime" type="time" />
+                <input v-model="newItem.startDate" type="datetime-local" />
             </div>
             <div class="row">
                 End Time:
-                <input v-model="newItem.endDate" type="date"/>
-                <input v-model="newItem.endTime" type="time" />
+                <input v-model="newItem.endDate" type="datetime-local"/>
             </div>
             <div v-if="!editing">
                 <button class="btn-primary" @click="addItem">Add Item</button>
