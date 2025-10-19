@@ -21,8 +21,6 @@
     
     const editing = ref(false);
 
-    //TODO: change the times to be a single value 'startDate'
-    //      change the <input> to be of 'type' 'datetime-local'
     const newItem = ref({
         title: '',
         discipline: '',

@@ -2,8 +2,6 @@ import api from "@/helpers/axios";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { addDurationToDate } from "@/helpers/date-helper";
-
 interface Activity {
     id: string;
     title: string;
