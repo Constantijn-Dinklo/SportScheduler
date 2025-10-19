@@ -69,5 +69,10 @@ export const useActivityStore = defineStore('activity', () => {
         })
     }
 
-    return { activities, calendarActivities, fetchActivities, addActivity, getActivity, updateActivityTime}
+    async function deleteActivity(id: string) {
+        const response = await api.delete(`/activities/${id}`);
+        activities.value = activities.value.filter((activity) => activity.id != response.data.activityId);
+    }
+
+    return { activities, calendarActivities, fetchActivities, addActivity, getActivity, updateActivityTime, deleteActivity}
 })

@@ -96,6 +96,11 @@
         resetPopup();
     }
 
+    function deleteItem() {
+        activityStore.deleteActivity(props.selectedActivityId);
+        close();
+    }
+
     function close(){
         emit("update:modelValue", false);
         resetPopup();
@@ -149,8 +154,14 @@
                 <input v-model="newItem.endDate" type="date"/>
                 <input v-model="newItem.endTime" type="time" />
             </div>
-            <button v-if="!editing" class="btn-primary" @click="addItem">Add Item</button>
-            <button v-else class="btn-primary" @click="addItem">Update Item</button>
+            <div v-if="!editing">
+                <button class="btn-primary" @click="addItem">Add Item</button>
+            </div>
+            <div v-else>
+                <button class="btn-primary" @click="addItem">Update Item</button>
+                <button class="btn-primary" @click="deleteItem">Delete Item</button>
+            </div>
+            
         </div>
         
     </dialog>
