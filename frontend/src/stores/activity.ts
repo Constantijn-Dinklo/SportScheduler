@@ -50,7 +50,13 @@ export const useActivityStore = defineStore('activity', () => {
             endDate,
             duration
         });
-        console.log(response);
+        activities.value.push({
+            id: response.data.id,
+            title: response.data.title,
+            disciplineId: response.data.disciplineId,
+            startDate: new Date(response.data.startDate),
+            endDate: new Date(response.data.endDate)
+        })
     }
 
     function getActivity(id: string): Activity | undefined {
