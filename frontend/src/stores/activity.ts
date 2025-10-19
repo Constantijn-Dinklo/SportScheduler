@@ -2,13 +2,12 @@ import api from "@/helpers/axios";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { v4 as uuidv4 } from "uuid";
 import { addDurationToDate } from "@/helpers/date-helper";
 
 interface Activity {
     id: string;
     title: string;
-    discipline: string;
+    disciplineId: string;
     startDate: Date;
     endDate: Date;
     duration?: number;
@@ -16,15 +15,7 @@ interface Activity {
 
 
 export const useActivityStore = defineStore('activity', () => {
-    const activities = ref<Activity[]>([{
-            id: uuidv4(),
-            title: "Test Item",
-            startDate: new Date(),
-            endDate: addDurationToDate(new Date(), 1000),
-            duration: 1000,
-            discipline: ''
-        }
-    ]);
+    const activities = ref<Activity[]>([]);
 
     const calendarActivities = computed(() => {
         return activities.value.map((activity) => {
@@ -32,7 +23,6 @@ export const useActivityStore = defineStore('activity', () => {
                 id: activity.id,
                 title: activity.title,
                 startDate: activity.startDate,
-                // endDate: addDurationToDate(activity.startDate, activity.duration),
                 classes: [],
             }
         })
@@ -46,7 +36,7 @@ export const useActivityStore = defineStore('activity', () => {
             activities.value.push({
                 id: activity._id,
                 title: activity.title,
-                discipline: activity.disciplineId,
+                disciplineId: activity.disciplineId,
                 startDate: activity.startTime,
                 endDate: activity.endTime
             })
