@@ -86,6 +86,14 @@
         resetPopup();
     }
 
+    function updateItem() {
+        const startDate = new Date(newItem.value.startDate);
+        const endDate = new Date(newItem.value.endDate); 
+        activityStore.updateActivity(props.selectedActivityId, newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
+        emit("update:modelValue", false);
+        resetPopup();
+    }
+
     function deleteItem() {
         activityStore.deleteActivity(props.selectedActivityId);
         close();
@@ -95,7 +103,6 @@
         emit("update:modelValue", false);
         resetPopup();
     }
-
 
     function resetPopup(){
         editing.value = false;
@@ -144,7 +151,7 @@
                 <button class="btn-primary" @click="addItem">Add Item</button>
             </div>
             <div v-else>
-                <button class="btn-primary" @click="addItem">Update Item</button>
+                <button class="btn-primary" @click="updateItem">Update Item</button>
                 <button class="btn-primary" @click="deleteItem">Delete Item</button>
             </div>
             

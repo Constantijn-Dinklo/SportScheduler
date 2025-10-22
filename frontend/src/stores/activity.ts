@@ -40,6 +40,10 @@ export const useActivityStore = defineStore('activity', () => {
         });
     }
 
+    function getActivity(id: string): Activity | undefined {
+        return activities.value.find(activity => activity.id === id);
+    }
+
     async function addActivity(title: string, disciplineId: string, startDate: Date, endDate: Date, duration: number){
         const response = await api.post('/activities', {
             title,
@@ -57,8 +61,25 @@ export const useActivityStore = defineStore('activity', () => {
         })
     }
 
-    function getActivity(id: string): Activity | undefined {
-        return activities.value.find(activity => activity.id === id);
+    async function updateActivity(id: string, title: string, disciplineId: string, startDate: Date, endDate: Date, duration: number) {
+        const response = await api.patch(`/activities/${id}`, {
+            title,
+            disciplineId,
+            startDate,
+            endDate,
+            duration
+        });
+        const updatedActivity = {
+            id,
+            title: response.data.title,
+            disciplineId: response.data.disciplineId,
+            startDate: new Date(response.data.startDate),
+            endDate: new Date(response.data.endDate)
+        };
+        const activityIndex = activities.value.findIndex(activity => activity.id === id);
+        if(activityIndex !== 1){
+            activities.value[activityIndex] = updatedActivity;
+        }
     }
 
     function updateActivityTime(id: string, newStartDate:Date){
@@ -78,5 +99,5 @@ export const useActivityStore = defineStore('activity', () => {
         activities.value = activities.value.filter((activity) => activity.id != response.data.activityId);
     }
 
-    return { activities, calendarActivities, fetchActivities, addActivity, getActivity, updateActivityTime, deleteActivity}
+    return { activities, calendarActivities, fetchActivities, getActivity, addActivity, updateActivity, updateActivityTime, deleteActivity}
 })

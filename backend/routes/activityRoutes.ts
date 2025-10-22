@@ -47,6 +47,20 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
   }
 });
 
+// ----------------- UPDATE ACTIVITY -----------------
+router.patch('/:id', authenticateToken, async(req: Request, res: Response) => {
+  console.log("Update Activity");
+  const activityId = req.params.id;
+  const userId = req.user.id;
+  const updated = await Activity.findOneAndUpdate(
+    { _id: activityId, userId: userId},
+    { $set: req.body },
+    { new: true}
+  );
+  console.log(updated);
+  res.json(updated);
+});
+
 // ----------------- DELETE ACTIVITY -----------------
 router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {

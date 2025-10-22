@@ -26,6 +26,19 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
     }
 });
 
+router.patch('/:id', authenticateToken, async (req: Request, res: Response) => {
+    console.log("Update discipline");
+    const disciplineId = req.params.id;
+    const userId = req.user.id;
+    console.log(req.body);
+    const updated = await Discipline.findOneAndUpdate(
+        { _id: disciplineId, userId: userId},
+        { $set: req.body }
+    );
+    console.log(updated);
+    res.json(updated);
+});
+
 router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
     try{
         const disciplineId = req.params.id;
@@ -56,6 +69,6 @@ router.delete('/:id', authenticateToken, async (req: Request, res: Response) => 
             error: err.message
         });
     }
-})
+});
 
 export default router;
