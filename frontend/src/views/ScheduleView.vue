@@ -26,11 +26,13 @@
     })
 
     function dateClicked(date: Date, calendarItems: any, windowEvent: any) {
+        console.log("Date Clicked");
         isOpen.value = true;
         selectedDate.value = date;
     }
 
     function itemClicked(calendarItem: ICalendarItem) {
+        console.log("Item Clicked");
         isOpen.value = true;
         selectedActivityId.value = calendarItem.id;
     }

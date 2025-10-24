@@ -41,11 +41,11 @@
     )
 
     watch(
-        [() => props.modelValue, () => props.selectedDate],
-        ([isOpen, selectedDate]) => {
-            if(!isOpen) return;
+        [() => props.selectedDate],
+        ([selectedDate]) => {
+            if(!props.modelValue) return;
 
-            editing.value = false;
+            resetPopupValues();
 
             const startTime = '12:00';
             const [hours, minutes] = startTime.split(":").map(Number);
@@ -83,7 +83,7 @@
         const endDate = new Date(newItem.value.endDate); 
         activityStore.addActivity(newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
         emit("update:modelValue", false);
-        resetPopup();
+        resetPopupValues();
     }
 
     function updateItem() {
@@ -91,7 +91,7 @@
         const endDate = new Date(newItem.value.endDate); 
         activityStore.updateActivity(props.selectedActivityId, newItem.value.title, newItem.value.discipline, startDate, endDate, newItem.value.duration);
         emit("update:modelValue", false);
-        resetPopup();
+        resetPopupValues();
     }
 
     function deleteItem() {
@@ -101,10 +101,10 @@
 
     function close(){
         emit("update:modelValue", false);
-        resetPopup();
+        resetPopupValues();
     }
 
-    function resetPopup(){
+    function resetPopupValues(){
         editing.value = false;
 
         newItem.value = {
