@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { formatDateString, formatTimeString, toDatetimeLocalString } from '@/helpers/date-helper';
+    import { toDatetimeLocalString } from '@/helpers/date-helper';
     import { useActivityStore } from '@/stores/activity';
     import { useDisciplineStore } from '@/stores/discipline';
     import { onMounted, ref, watch } from 'vue';
