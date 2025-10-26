@@ -35,11 +35,19 @@ export const useAuthStore = defineStore('auth', () => {
         auth.value.isAuthenticated = false;
     }
 
-    async function getProfile() {
-        console.log("Get Profile");
-        const res = await api.get('/auth/profile');
-        console.log(res);
+    function isAuthenticated() {
+        return auth.value.isAuthenticated;
     }
 
-    return { auth, signup, login, logout, getProfile };
+    function getUserName() {
+        return auth.value.name;
+    }
+
+    async function getProfile() {
+        const res = await api.get('/auth/profile');
+        auth.value.isAuthenticated = true;
+        auth.value.name = res.data.userName;
+    }
+
+    return { auth, signup, login, logout, isAuthenticated, getUserName, getProfile };
 })

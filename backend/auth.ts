@@ -55,8 +55,10 @@ router.post('/logout', (_req: Request, res: Response) => {
     res.json({ message: 'Logged out'});
 });
 
-router.get('/profile', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
-  res.json({ message: 'Protected data', user: req.user });
+router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+    const user: IUser | null = await User.findOne({ email: req.user.username});
+    if(!user) return res.status(400).json({ message: 'This user does not exist'});
+    res.json({ message: 'User is logged in', userName: user.name });
 });
 
 export default router;

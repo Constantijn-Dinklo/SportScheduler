@@ -18,14 +18,6 @@
         authStore.signup(name.value, email.value);
     }
 
-    function getProfile() {
-        authStore.getProfile();
-    }
-
-    function logout() {
-        authStore.logout();
-    }
-
 </script>
 
 <template>
@@ -43,15 +35,6 @@
             <div>Email: <input v-model="email" type="email" placeholder="email"/></div>
             <div><button @click="signup">Sign Up</button></div>
         </div>
-    </div>
-
-    <div>
-        <div>Get Profile</div>
-        <div><button @click="getProfile">Get profile</button></div>
-    </div>
-
-    <div>
-        <button @click="logout">Logout</button>
     </div>
     
 </template>
