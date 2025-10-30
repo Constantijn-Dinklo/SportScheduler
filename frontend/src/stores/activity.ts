@@ -6,8 +6,8 @@ interface Activity {
     id: string;
     title: string;
     disciplineId: string;
-    startDate: Date;
-    endDate: Date;
+    startDateTime: Date;
+    endDateTime: Date;
     duration?: number;
 }
 
@@ -20,7 +20,7 @@ export const useActivityStore = defineStore('activity', () => {
             return {
                 id: activity.id,
                 title: activity.title,
-                startDate: activity.startDate,
+                startDate: activity.startDateTime,
                 classes: [],
             }
         })
@@ -29,13 +29,13 @@ export const useActivityStore = defineStore('activity', () => {
     async function fetchActivities() {
         const response = await api.get('/activities');
         const data = response.data;
-        activities.value = data.map((activity: any) => {
+        activities.value = data.map((activity: any): Activity => {
             return {
                 id: activity._id,
                 title: activity.title,
                 disciplineId: activity.disciplineId,
-                startDate: new Date(activity.startTime),
-                endDate: new Date(activity.endTime)
+                startDateTime: new Date(activity.startDateTime),
+                endDateTime: new Date(activity.endDateTime)
             }
         });
     }
@@ -44,52 +44,52 @@ export const useActivityStore = defineStore('activity', () => {
         return activities.value.find(activity => activity.id === id);
     }
 
-    async function addActivity(title: string, disciplineId: string, startDate: Date, endDate: Date, duration: number){
+    async function addActivity(title: string, disciplineId: string, startDateTime: Date, endDateTime: Date, duration: number){
         const response = await api.post('/activities', {
             title,
             disciplineId,
-            startDate,
-            endDate,
+            startDateTime,
+            endDateTime,
             duration
         });
         activities.value.push({
             id: response.data.id,
             title: response.data.title,
             disciplineId: response.data.disciplineId,
-            startDate: new Date(response.data.startDate),
-            endDate: new Date(response.data.endDate)
+            startDateTime: new Date(response.data.startDateTime),
+            endDateTime: new Date(response.data.endDateTime)
         })
     }
 
-    async function updateActivity(id: string, title: string, disciplineId: string, startDate: Date, endDate: Date, duration: number) {
+    async function updateActivity(id: string, title: string, disciplineId: string, startDateTime: Date, endDateTime: Date, duration: number) {
         const response = await api.patch(`/activities/${id}`, {
             title,
             disciplineId,
-            startDate,
-            endDate,
+            startDateTime,
+            endDateTime,
             duration
         });
-        const updatedActivity = {
+        const updatedActivity: Activity = {
             id,
             title: response.data.title,
             disciplineId: response.data.disciplineId,
-            startDate: new Date(response.data.startDate),
-            endDate: new Date(response.data.endDate)
+            startDateTime: new Date(response.data.startDateTime),
+            endDateTime: new Date(response.data.endDateTime)
         };
         const activityIndex = activities.value.findIndex(activity => activity.id === id);
-        if(activityIndex !== 1){
+        if(activityIndex !== -1){
             activities.value[activityIndex] = updatedActivity;
         }
     }
 
-    function updateActivityTime(id: string, newStartDate:Date){
+    function updateActivityTime(id: string, newStartDateTime: Date){
         activities.value = activities.value.map((activity) => {
             if(activity.id != id) {
                 return activity
             }
             return {
                 ...activity,
-                startDate: newStartDate
+                startDateTime: newStartDateTime
             }
         })
     }

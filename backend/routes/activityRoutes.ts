@@ -28,8 +28,8 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
       userId: user.id,
       title: req.body.title,
       disciplineId: req.body.disciplineId,
-      startTime: req.body.startDate,
-      endTime: req.body.endDate,
+      startDateTime: req.body.startDateTime,
+      endDateTime: req.body.endDateTime,
     };
 
     const activity = new Activity(activityBody);
@@ -39,8 +39,8 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
       id: activity._id,
       title: activity.title,
       disciplineId: activity.disciplineId,
-      startDate: activity.startTime,
-      endDate: activity.endTime,
+      startDateTime: activity.startDateTime,
+      endDateTime: activity.endDateTime,
     });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -49,15 +49,22 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
 
 // ----------------- UPDATE ACTIVITY -----------------
 router.patch('/:id', authenticateToken, async(req: Request, res: Response) => {
-  console.log("Update Activity");
   const activityId = req.params.id;
   const userId = req.user.id;
+  
+  const activityBody = {
+    userId: userId,
+    title: req.body.title,
+    disciplineId: req.body.disciplineId,
+    startDateTime: req.body.startDateTime,
+    endDateTime: req.body.endDateTime,
+  };
+
   const updated = await Activity.findOneAndUpdate(
     { _id: activityId, userId: userId},
-    { $set: req.body },
+    { $set: activityBody },
     { new: true}
   );
-  console.log(updated);
   res.json(updated);
 });
 

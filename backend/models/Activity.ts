@@ -4,8 +4,8 @@ export interface IActivity extends Document {
     userId: Types.ObjectId,
     title: string;
     disciplineId: Types.ObjectId;
-    startTime: Date;
-    endTime: Date;
+    startDateTime: Date;
+    endDateTime: Date;
     duration?: number;
 }
 
@@ -24,11 +24,11 @@ const ActivitySchema = new Schema<IActivity>({
         required: true,
         ref: 'Discipline'
     },
-    startTime: {
+    startDateTime: {
         type: Date,
         required: true
     },
-    endTime: {
+    endDateTime: {
         type: Date,
         required: true
     },

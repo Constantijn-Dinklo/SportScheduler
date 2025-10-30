@@ -70,8 +70,8 @@
             newItem.value = {
                 title: activity.title,
                 discipline: activity.disciplineId,
-                startDate: toDatetimeLocalString(activity.startDate),
-                endDate: toDatetimeLocalString(activity.endDate),
+                startDate: toDatetimeLocalString(activity.startDateTime),
+                endDate: toDatetimeLocalString(activity.endDateTime),
                 duration: 60
             }
         }
